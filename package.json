@@ -1,0 +1,22 @@
+{
+  "name": "_template_phaser",
+  "version": "1.0.0",
+  "description": "Phaser 3 + Vite + TypeScript template",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "keywords": ["phaser", "vite", "typescript", "game"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2",
+    "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  }
+}
