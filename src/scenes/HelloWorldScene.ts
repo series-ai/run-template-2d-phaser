@@ -53,6 +53,10 @@ export default class HelloWorldScene extends Phaser.Scene {
       repeat: -1,
     });
 
+    // Set up dialog close button listener
+    const closeBtn = document.getElementById('close-dialog-btn');
+    closeBtn?.addEventListener('click', () => this.hideDialog());
+
     VenusAPI.log("[HelloWorldScene] Scene created successfully");
   }
 
@@ -182,20 +186,16 @@ export default class HelloWorldScene extends Phaser.Scene {
   }
 
   private showDialog(): void {
-    const overlay = document.createElement("div");
-    overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:1000";
+    const overlay = document.getElementById("dialog-overlay");
+    if (overlay) {
+      overlay.classList.remove("hidden");
+    }
+  }
 
-    const dialog = document.createElement("div");
-    dialog.style.cssText = "background:white;padding:30px;border-radius:10px;text-align:center";
-    dialog.innerHTML = '<p style="color:#333;margin-bottom:20px">This is an HTML dialog overlaying the Phaser game area.</p>';
-
-    const button = document.createElement("button");
-    button.textContent = "Close";
-    button.style.cssText = "padding:10px 20px;background:#3498db;color:white;border:none;border-radius:5px;cursor:pointer";
-    button.onclick = () => overlay.remove();
-
-    dialog.appendChild(button);
-    overlay.appendChild(dialog);
-    document.body.appendChild(overlay);
+  private hideDialog(): void {
+    const overlay = document.getElementById('dialog-overlay');
+    if (overlay) {
+      overlay.classList.add('hidden');
+    }
   }
 }
