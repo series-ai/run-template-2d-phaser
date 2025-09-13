@@ -3,23 +3,27 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
   margin: 0;
-  padding: 20px;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 #app {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 canvas {
   display: block;
-  border-radius: 10px;
 }

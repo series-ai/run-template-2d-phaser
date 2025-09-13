@@ -3,92 +3,199 @@ import VenusAPI from '../../venus-api/index.js';
 
 export default class HelloWorldScene extends Phaser.Scene {
   private mainText!: Phaser.GameObjects.Text;
-  private alertButton?: Phaser.GameObjects.Text;
+  private ball!: Phaser.GameObjects.Arc;
+  private clickButton!: Phaser.GameObjects.Text;
+  private hasStarted: boolean = false;
+  private hudInsets = { top: 0, bottom: 0, left: 0, right: 0 };
+  private hudLine?: Phaser.GameObjects.Line;
+  private floatTween?: Phaser.Tweens.Tween;
 
   constructor() {
-    super('hello-world');
-  }
-
-  preload(): void {
-    // Load the Phaser logo
-    this.load.image('logo', 'assets/phaser-logo.png');
+    super("hello-world");
   }
 
   create(): void {
-    // Add the logo to the center of the screen
-    const logo = this.add.image(400, 300, 'logo');
-    logo.setScale(0.5);
+    VenusAPI.log("[HelloWorldScene] Create called");
 
-    // Add main text that will be updated by Venus lifecycle events
-    this.mainText = this.add.text(400, 450, 'Hello World from Phaser 3!', {
-      fontSize: '32px',
-      color: '#ffffff'
+    const gameWidth = this.scale.width;
+    const gameHeight = this.scale.height;
+    const centerX = gameWidth / 2;
+    const centerY = gameHeight / 2;
+
+    // Simple background
+    this.add.rectangle(centerX, centerY, gameWidth, gameHeight, 0x1a1a2e);
+
+    // Create a simple yellow ball
+    this.ball = this.add.circle(centerX, 200, 30, 0xffff00);
+
+    // Enable physics on the ball
+    this.physics.add.existing(this.ball);
+    const body = this.ball.body as Phaser.Physics.Arcade.Body;
+    body.setCollideWorldBounds(true);
+    body.setBounce(1);
+    body.setCircle(30);
+
+    // Add text
+    this.mainText = this.add.text(centerX, centerY, "Click Play To Start", {
+      fontSize: "24px",
+      color: "#ffffff",
+      align: "center",
     });
     this.mainText.setOrigin(0.5);
 
-    // Make the logo interactive
-    logo.setInteractive();
-    logo.on('pointerdown', () => {
-      logo.setTint(Math.random() * 0xffffff);
-    });
-
-    // Add some simple animation
-    this.tweens.add({
-      targets: logo,
-      y: 280,
+    // Add floating animation to ball before game starts
+    this.floatTween = this.tweens.add({
+      targets: this.ball,
+      y: this.ball.y - 20,
       duration: 1500,
-      ease: 'Power2',
+      ease: "Sine.easeInOut",
       yoyo: true,
-      repeat: -1
+      repeat: -1,
     });
+
+    VenusAPI.log("[HelloWorldScene] Scene created successfully");
   }
 
-  // Called when onShow event is triggered
-  onShow(): void {
-    this.mainText.setText('onShow was called');
-    VenusAPI.log('[HelloWorldScene] onShow was called');
+  update(): void {
+    if (!this.hasStarted) return;
+
+    // Maintain ball speed
+    const body = this.ball.body as Phaser.Physics.Arcade.Body;
+    const speed = Math.sqrt(body.velocity.x * body.velocity.x + body.velocity.y * body.velocity.y);
+    if (speed > 0 && speed < 270) {
+      const scale = 300 / speed;
+      body.setVelocity(body.velocity.x * scale, body.velocity.y * scale);
+    }
   }
 
-  // Called when onPlay event is triggered
-  onPlay(): void {
-    this.mainText.setText('onPlay was called, your game should begin!');
-    VenusAPI.log('[HelloWorldScene] onPlay was called - game started!');
-    
-    // Add the alert button after onPlay
-    this.createAlertButton();
+  onShow(context?: any): void {
+    VenusAPI.log("[HelloWorldScene] onShow called");
+    this.mainText.setText("Click Play To Start");
+
+    // Handle hudInsets if provided
+    if (context?.hudInsets) {
+      this.hudInsets = context.hudInsets;
+      this.updateHudLine();
+    }
   }
 
-  private createAlertButton(): void {
-    if (this.alertButton) {
-      this.alertButton.destroy();
+  onPlay(context?: any): void {
+    VenusAPI.log("[HelloWorldScene] onPlay called");
+    this.mainText.setText("Game Started!");
+
+    // Handle hudInsets if provided
+    if (context?.hudInsets) {
+      this.hudInsets = context.hudInsets;
+      this.updateHudLine();
     }
 
-    // Create a styled button
-    this.alertButton = this.add.text(400, 520, 'Click for VenusAPI Alert!', {
-      fontSize: '24px',
-      color: '#ffffff',
-      backgroundColor: '#3498db',
-      padding: { x: 20, y: 10 }
-    });
-    this.alertButton.setOrigin(0.5);
-    this.alertButton.setInteractive({ useHandCursor: true });
-    
-    // Add button click handler
-    this.alertButton.on('pointerdown', () => {
-      VenusAPI.showAlert({
-        title: 'VenusAPI Alert',
-        message: 'You clicked a VenusAPI button!',
-        buttonText: 'OK'
-      });
+    // Start ball movement
+    this.hasStarted = true;
+
+    // Stop floating animation
+    if (this.floatTween) {
+      this.floatTween.stop();
+    }
+
+    const body = this.ball.body as Phaser.Physics.Arcade.Body;
+    body.setVelocity(150, 200);
+
+    // Add color changing animation
+    this.time.addEvent({
+      delay: 1000,
+      callback: () => {
+        const colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        this.ball.setFillStyle(randomColor);
+      },
+      loop: true,
     });
 
-    // Add hover effects
-    this.alertButton.on('pointerover', () => {
-      this.alertButton?.setStyle({ backgroundColor: '#2980b9' });
+    // Update text after delay
+    this.time.delayedCall(1500, () => {
+      this.mainText.setText("Bouncing Ball Demo");
+      this.createButton();
     });
+  }
 
-    this.alertButton.on('pointerout', () => {
-      this.alertButton?.setStyle({ backgroundColor: '#3498db' });
+  private updateHudLine(): void {
+    const gameWidth = this.scale.width;
+    VenusAPI.log(`[HelloWorldScene] updateHudLine called with hudInsets.top: ${this.hudInsets.top}`);
+
+    // Remove existing line if any
+    if (this.hudLine) {
+      this.hudLine.destroy();
+    }
+
+    // Create white line at hudInsets top boundary
+    if (this.hudInsets.top > 0) {
+      const graphics = this.add.graphics();
+      graphics.lineStyle(2, 0xffffff, 0.5);
+      graphics.lineBetween(0, this.hudInsets.top, gameWidth, this.hudInsets.top);
+
+      VenusAPI.log(`[HelloWorldScene] HUD line drawn at y=${this.hudInsets.top}`);
+    }
+
+    // Update UI positions based on hudInsets
+    this.updateUIPositions();
+  }
+
+  private updateUIPositions(): void {
+    const gameWidth = this.scale.width;
+    const gameHeight = this.scale.height;
+    const centerX = gameWidth / 2;
+
+    // Calculate safe area
+    const safeTop = this.hudInsets.top;
+    const safeBottom = gameHeight - this.hudInsets.bottom;
+    const safeCenterY = safeTop + (safeBottom - safeTop) / 2;
+
+    // Update text position to be in safe area
+    if (this.mainText) {
+      this.mainText.setPosition(centerX, safeCenterY);
+    }
+
+    // Update button position if it exists
+    if (this.clickButton) {
+      this.clickButton.setPosition(centerX, safeBottom - 60);
+    }
+  }
+
+  private createButton(): void {
+    const gameWidth = this.scale.width;
+    const gameHeight = this.scale.height;
+    const centerX = gameWidth / 2;
+    const safeBottom = gameHeight - this.hudInsets.bottom;
+
+    this.clickButton = this.add.text(centerX, safeBottom - 60, "Click me", {
+      fontSize: "20px",
+      color: "#ffffff",
+      backgroundColor: "#e74c3c",
+      padding: { x: 20, y: 10 },
     });
+    this.clickButton.setOrigin(0.5);
+    this.clickButton.setInteractive({ useHandCursor: true });
+
+    this.clickButton.on("pointerdown", () => {
+      this.showDialog();
+    });
+  }
+
+  private showDialog(): void {
+    const overlay = document.createElement("div");
+    overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:1000";
+
+    const dialog = document.createElement("div");
+    dialog.style.cssText = "background:white;padding:30px;border-radius:10px;text-align:center";
+    dialog.innerHTML = '<p style="color:#333;margin-bottom:20px">This is an HTML dialog overlaying the Phaser game area.</p>';
+
+    const button = document.createElement("button");
+    button.textContent = "Close";
+    button.style.cssText = "padding:10px 20px;background:#3498db;color:white;border:none;border-radius:5px;cursor:pointer";
+    button.onclick = () => overlay.remove();
+
+    dialog.appendChild(button);
+    overlay.appendChild(dialog);
+    document.body.appendChild(overlay);
   }
 }
