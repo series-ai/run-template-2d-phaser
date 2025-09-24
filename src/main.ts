@@ -5,8 +5,8 @@ import VenusAPI from 'venus-sdk-api';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: 360,
-  height: 640,
+  width: 720,
+  height: 1280,
   parent: "app",
   backgroundColor: "#2c3e50",
   scene: HelloWorldScene, // Use the class directly, not in an array
