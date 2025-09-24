@@ -18,6 +18,6 @@
   },
   "dependencies": {
     "phaser": "^3.90.0",
-    "venus-sdk-api": "file:./venus-sdk/venus-sdk-api-0.0.66.tgz"
+    "venus-sdk-api": "file:./venus-sdk/venus-sdk-api-0.0.70.tgz"
   }
 }
