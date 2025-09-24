@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import VenusAPI from '../../venus-api/index.js';
+import VenusAPI from 'venus-sdk-api';
 
 export default class HelloWorldScene extends Phaser.Scene {
   private mainText!: Phaser.GameObjects.Text;

@@ -17,6 +17,7 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
-    "phaser": "^3.90.0"
+    "phaser": "^3.90.0",
+    "venus-sdk-api": "file:./venus-sdk/venus-sdk-api-0.0.66.tgz"
   }
 }

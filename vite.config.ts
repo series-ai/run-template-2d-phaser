@@ -4,6 +4,7 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  base: "./",
   build: {
     rollupOptions: {
       output: {
@@ -12,5 +13,5 @@ export default defineConfig({
         }
       }
     }
-  }
+  },
 })
