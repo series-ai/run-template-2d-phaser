@@ -53,7 +53,7 @@ npm run preview
 │   ├── scenes/          # Phaser scenes with VenusAPI integration
 │   ├── main.ts          # Entry point with VenusAPI initialization
 │   └── style.css        # Global styles
-├── venus-api/           # Symlinked VenusAPI (shared across H5 games)
+├── npm: @series-inc/venus-sdk   # Installed VenusAPI SDK
 ├── index.html           # HTML template
 ├── tsconfig.json        # TypeScript configuration
 └── vite.config.ts       # Vite configuration
