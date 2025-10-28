@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import HelloWorldScene from './scenes/HelloWorldScene';
 import './style.css';
-import VenusAPI from "venus-sdk/api";
+import VenusAPI from "@series-inc/venus-sdk/api";
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
