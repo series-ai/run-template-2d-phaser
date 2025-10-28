@@ -22,7 +22,7 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
-    "@series-inc/venus-sdk": "^2.4.1",
+    "@series-inc/venus-sdk": "^2.6.2",
     "phaser": "^3.90.0"
   }
 }
