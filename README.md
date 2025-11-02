@@ -48,15 +48,19 @@ npm run preview
 
 ```
 ├── public/
-│   └── assets/          # Static assets (images, sounds, etc.)
+│   └── assets/          # Small static assets bundled with app (icons, UI elements)
+├── cdn/                 # Large static assets deployed to CDN
+│   ├── assets/          # Your large images, sounds, music, etc.
+│   └── README.md        # CDN usage guide
 ├── src/
 │   ├── scenes/          # Phaser scenes with VenusAPI integration
 │   ├── main.ts          # Entry point with VenusAPI initialization
 │   └── style.css        # Global styles
-├── npm: @series-inc/venus-sdk   # Installed VenusAPI SDK
+├── node_modules/
+│   └── @series-inc/venus-sdk  # VenusAPI SDK
 ├── index.html           # HTML template
 ├── tsconfig.json        # TypeScript configuration
-└── vite.config.ts       # Vite configuration
+└── vite.config.ts       # Vite configuration with CDN plugin
 ```
 
 ## VenusAPI Integration
@@ -144,4 +148,83 @@ The included HelloWorld scene shows:
 - **Build Settings**: Modify `vite.config.ts`
 - **TypeScript**: Update `tsconfig.json` for your needs
 - **Styling**: Edit `src/style.css` for custom appearance
+
+## Managing Game Assets
+
+You have two options for static assets (images, sounds, music):
+
+### Option 1: Bundle with App (public/ folder)
+**Use for:** Small essential assets (UI elements, icons, small sprites)
+
+```bash
+# Add to public/assets/
+cp sprite.png public/assets/
+
+# Reference in Phaser
+this.load.image('sprite', 'assets/sprite.png');
+```
+
+**Pros:** Fast loading, bundled with app  
+**Cons:** Increases app size, deployed with every version
+
+### Option 2: CDN Hosting (cdn/ folder)
+**Use for:** Large files (background music, high-res images, videos)
+
+#### Step 1: Set Your App Name
+Open `vite.config.ts` and update the `APP_NAME` constant:
+```typescript
+// IMPORTANT: Update this to your actual app name
+const APP_NAME = 'my-awesome-game'; // ← Change this!
+```
+
+#### Step 2: Add Assets to cdn/ Folder
+```bash
+# Add your large assets to the cdn folder
+cp background-music.mp3 cdn/assets/
+cp hero-sprite.png cdn/assets/
+```
+
+#### Step 3: Reference in Code
+```typescript
+// Use VenusAPI.resolveAssetUrl() with your app name:
+const audioUrl = VenusAPI.resolveAssetUrl('my-awesome-game/assets/background-music.mp3');
+this.load.audio('bgMusic', audioUrl);
+
+// Returns different URLs based on environment:
+// Local dev:  /my-awesome-game/assets/background-music.mp3
+// Production: https://venus-static-01293ak.web.app/my-awesome-game/assets/background-music.mp3
+```
+
+#### Step 4: Local Development
+The Vite plugin automatically serves CDN assets from your local `cdn/` folder during development:
+- Request: `/my-awesome-game/assets/background-music.mp3`
+- Served from: `cdn/assets/background-music.mp3`
+
+#### Step 5: Deploy to Production
+```bash
+# Commit and push to develop branch
+git add cdn/
+git commit -m "Add game assets"
+git push origin develop
+
+# Automatic deployment happens:
+# 1. GitHub Actions copies cdn/ → static-asset-cdn/public/my-awesome-game/
+# 2. Firebase deploys to CDN (~2-5 minutes)
+# 3. Assets available at: https://venus-static-01293ak.web.app/my-awesome-game/
+```
+
+**Important Notes:**
+- ✅ **DO** update `APP_NAME` in `vite.config.ts` first
+- ✅ **DO** commit assets to `cdn/` folder (source of truth)
+- ❌ **DON'T** manually edit `static-asset-cdn/public/` (auto-synced by CI)
+- ✅ **DO** use `VenusAPI.resolveAssetUrl()` to get the right URL for both environments
+
+**Pros:** Doesn't bloat app, shared across versions, can update independently  
+**Cons:** Network-dependent in production
+
+### Recommended Approach
+- **Small assets (<100KB)**: Use `public/assets/`
+- **Large assets (>100KB)**: Use `cdn/assets/`
+- **Essential loading screen**: Use `public/`
+- **Background music, cutscenes**: Use `cdn/`
 
