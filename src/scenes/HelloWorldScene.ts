@@ -5,17 +5,13 @@ export default class HelloWorldScene extends Phaser.Scene {
   private mainText!: Phaser.GameObjects.Text;
   private ball!: Phaser.GameObjects.Arc;
   private clickButton!: Phaser.GameObjects.Text;
-  private hasStarted: boolean = false;
-  private hudInsets = { top: 0, bottom: 0, left: 0, right: 0 };
-  private hudLine?: Phaser.GameObjects.Line;
-  private floatTween?: Phaser.Tweens.Tween;
 
   constructor() {
     super("hello-world");
   }
 
   create(): void {
-    VenusAPI.log("[HelloWorldScene] Create called");
+    VenusAPI.log("[HelloWorldScene] Create called - VenusAPI already initialized");
 
     const gameWidth = this.scale.width;
     const gameHeight = this.scale.height;
@@ -36,72 +32,14 @@ export default class HelloWorldScene extends Phaser.Scene {
     body.setCircle(30);
 
     // Add text
-    this.mainText = this.add.text(centerX, centerY, "Click Play To Start", {
+    this.mainText = this.add.text(centerX, centerY, "Game Started!", {
       fontSize: "24px",
       color: "#ffffff",
       align: "center",
     });
     this.mainText.setOrigin(0.5);
 
-    // Add floating animation to ball before game starts
-    this.floatTween = this.tweens.add({
-      targets: this.ball,
-      y: this.ball.y - 20,
-      duration: 1500,
-      ease: "Sine.easeInOut",
-      yoyo: true,
-      repeat: -1,
-    });
-
-    // Set up dialog close button listener
-    const closeBtn = document.getElementById('close-dialog-btn');
-    closeBtn?.addEventListener('click', () => this.hideDialog());
-
-    VenusAPI.log("[HelloWorldScene] Scene created successfully");
-  }
-
-  update(): void {
-    if (!this.hasStarted) return;
-
-    // Maintain ball speed
-    const body = this.ball.body as Phaser.Physics.Arcade.Body;
-    const speed = Math.sqrt(body.velocity.x * body.velocity.x + body.velocity.y * body.velocity.y);
-    if (speed > 0 && speed < 270) {
-      const scale = 300 / speed;
-      body.setVelocity(body.velocity.x * scale, body.velocity.y * scale);
-    }
-  }
-
-  onShow(context?: any): void {
-    VenusAPI.log("[HelloWorldScene] onShow called");
-    this.mainText.setText("Click Play To Start");
-
-    // Handle hudInsets if provided
-    if (context?.hudInsets) {
-      this.hudInsets = context.hudInsets;
-      this.updateHudLine();
-    }
-  }
-
-  onPlay(context?: any): void {
-    VenusAPI.log("[HelloWorldScene] onPlay called");
-    this.mainText.setText("Game Started!");
-
-    // Handle hudInsets if provided
-    if (context?.hudInsets) {
-      this.hudInsets = context.hudInsets;
-      this.updateHudLine();
-    }
-
-    // Start ball movement
-    this.hasStarted = true;
-
-    // Stop floating animation
-    if (this.floatTween) {
-      this.floatTween.stop();
-    }
-
-    const body = this.ball.body as Phaser.Physics.Arcade.Body;
+    // Start ball movement immediately (VenusAPI is ready)
     body.setVelocity(150, 200);
 
     // Add color changing animation
@@ -115,53 +53,24 @@ export default class HelloWorldScene extends Phaser.Scene {
       loop: true,
     });
 
-    // Update text after delay
+    // Update text and create button after delay
     this.time.delayedCall(1500, () => {
       this.mainText.setText("Bouncing Ball Demo");
       this.createButton();
     });
+
+    // Set up dialog close button listener
+    const closeBtn = document.getElementById('close-dialog-btn');
+    closeBtn?.addEventListener('click', () => this.hideDialog());
   }
 
-  private updateHudLine(): void {
-    const gameWidth = this.scale.width;
-    VenusAPI.log(`[HelloWorldScene] updateHudLine called with hudInsets.top: ${this.hudInsets.top}`);
-
-    // Remove existing line if any
-    if (this.hudLine) {
-      this.hudLine.destroy();
-    }
-
-    // Create white line at hudInsets top boundary
-    if (this.hudInsets.top > 0) {
-      const graphics = this.add.graphics();
-      graphics.lineStyle(2, 0xffffff, 0.5);
-      graphics.lineBetween(0, this.hudInsets.top, gameWidth, this.hudInsets.top);
-
-      VenusAPI.log(`[HelloWorldScene] HUD line drawn at y=${this.hudInsets.top}`);
-    }
-
-    // Update UI positions based on hudInsets
-    this.updateUIPositions();
-  }
-
-  private updateUIPositions(): void {
-    const gameWidth = this.scale.width;
-    const gameHeight = this.scale.height;
-    const centerX = gameWidth / 2;
-
-    // Calculate safe area
-    const safeTop = this.hudInsets.top;
-    const safeBottom = gameHeight - this.hudInsets.bottom;
-    const safeCenterY = safeTop + (safeBottom - safeTop) / 2;
-
-    // Update text position to be in safe area
-    if (this.mainText) {
-      this.mainText.setPosition(centerX, safeCenterY);
-    }
-
-    // Update button position if it exists
-    if (this.clickButton) {
-      this.clickButton.setPosition(centerX, safeBottom - 60);
+  update(): void {
+    // Maintain ball speed
+    const body = this.ball.body as Phaser.Physics.Arcade.Body;
+    const speed = Math.sqrt(body.velocity.x * body.velocity.x + body.velocity.y * body.velocity.y);
+    if (speed > 0 && speed < 270) {
+      const scale = 300 / speed;
+      body.setVelocity(body.velocity.x * scale, body.velocity.y * scale);
     }
   }
 
@@ -169,9 +78,8 @@ export default class HelloWorldScene extends Phaser.Scene {
     const gameWidth = this.scale.width;
     const gameHeight = this.scale.height;
     const centerX = gameWidth / 2;
-    const safeBottom = gameHeight - this.hudInsets.bottom;
 
-    this.clickButton = this.add.text(centerX, safeBottom - 60, "Click me", {
+    this.clickButton = this.add.text(centerX, gameHeight - 100, "Click me", {
       fontSize: "20px",
       color: "#ffffff",
       backgroundColor: "#e74c3c",
