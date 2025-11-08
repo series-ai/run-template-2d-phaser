@@ -1,0 +1,4 @@
+---
+alwaysApply: true
+---
+When dealing with the VenusAPI, always check the latest documentation first: https://www.npmjs.com/package/@series-inc/venus-sdk
