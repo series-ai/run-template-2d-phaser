@@ -1,1 +1,10 @@
-/dist/
+node_modules/
+dist/
+dist-ssr/
+*.log
+.env*
+.DS_Store
+.vscode/
+.idea/
+coverage/
+game.config.json

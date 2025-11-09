@@ -9,7 +9,7 @@
 		"build": "npm run _build",
 		"build:bundled": "cross-env VENUS_DISABLE_EMBEDDED_LIBS=true npm run _build",
     "preview": "vite preview",
-		"yeet": "npm install && npm run build && venus update-and-publish-game --env local --yes"
+		"yeet": "npm install && npm run build && venus update-and-publish-game"
   },
   "keywords": [
     "phaser",
@@ -28,7 +28,7 @@
     "vite": "^6.3.5"
   },
 	"dependencies": {
-		"@series-inc/venus-sdk": "file:./venus-sdk/series-inc-venus-sdk-3.1.0.tgz",
+		"@series-inc/venus-sdk": "file:./venus-sdk/series-inc-venus-sdk-3.1.1.tgz",
 		"phaser": "^3.90.0"
 	}
 }
