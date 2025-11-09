@@ -1,4 +1,6 @@
 ---
 alwaysApply: true
 ---
-When dealing with the VenusAPI, always check the latest documentation first: https://www.npmjs.com/package/@series-inc/venus-sdk
+When dealing with the VenusAPI for features like storage, ads, user profiles, always check the latest documentation first: https://www.npmjs.com/package/@series-inc/venus-sdk
+
+When dealing with publishing the game to the Venus platform, always check the latest CLI documentation: https://github.com/Zee-Series-AI/venus_cli_releases
