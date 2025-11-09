@@ -55,7 +55,7 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     // Update text and create button after delay
     this.time.delayedCall(1500, () => {
-      this.mainText.setText("Bouncing Ball Demo");
+      this.mainText.setText("Bouncing Ball Template v.0.0.4.woof");
       this.createButton();
     });
 

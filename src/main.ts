@@ -34,7 +34,7 @@ async function bootstrap(): Promise<void> {
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       width: 720,
-      height: 1280,
+      height: 1560,
       parent: "app",
       backgroundColor: "#2c3e50",
       scene: HelloWorldScene,
@@ -46,7 +46,7 @@ async function bootstrap(): Promise<void> {
         },
       },
       scale: {
-        mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
+        mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
       },
     };

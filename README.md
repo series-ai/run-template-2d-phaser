@@ -38,11 +38,39 @@ A modern template for creating Phaser 3 games integrated with VenusAPI, using Vi
 npm run build
 ```
 
+**Note**: Builds with **embedded libraries by default** (Phaser loaded from Venus host). Bundle size: ~272KB vs 1.75MB bundled.
+
+For standalone HTML5 export:
+```bash
+npm run build:bundled
+```
+
 ### Preview Production Build
 
 ```bash
 npm run preview
 ```
+
+## Embedded Libraries
+
+This template uses the Venus embedded libraries system **by default**. Phaser is loaded from:
+- **Mobile**: Venus host app (instant, offline-ready, 1.1MB saved)
+- **Web**: CDN fallback (`venus-static-01293ak.web.app`)
+
+**Build Scripts**:
+- `npm run build` - **Default**: Embedded libraries (272KB bundle)
+- `npm run build:bundled` - Standalone export (1.75MB bundle)
+
+The Vite plugin automatically:
+- Externalizes Phaser from your bundle
+- Generates virtual modules that load from `window.__venusLibraryExports`
+- Injects configuration for the Venus host to provide libraries
+- Serves CDN assets from local `cdn/` folder during development
+
+**When to use bundled mode:**
+- Distributing standalone HTML5 games outside Venus
+- Testing without the Venus host
+- Creating web-only exports
 
 ## Project Structure
 
@@ -227,4 +255,3 @@ git push origin develop
 - **Large assets (>100KB)**: Use `cdn/assets/`
 - **Essential loading screen**: Use `public/`
 - **Background music, cutscenes**: Use `cdn/`
-
