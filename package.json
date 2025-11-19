@@ -5,11 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-		"_build": "tsc && vite build",
-		"build": "npm run _build",
-		"build:bundled": "cross-env VENUS_DISABLE_EMBEDDED_LIBS=true npm run _build",
-    "preview": "vite preview",
-		"yeet": "npm install && npm run build && venus update-and-publish-game"
+    "_build": "tsc && vite build",
+    "build": "npm run _build",
+    "build:bundled": "cross-env VENUS_DISABLE_EMBEDDED_LIBS=true npm run _build",
+    "preview": "vite preview"
   },
   "keywords": [
     "phaser",
@@ -20,15 +19,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-		"@babel/parser": "^7.26.3",
+    "@babel/parser": "^7.26.3",
     "@types/node": "^24.3.0",
-		"cross-env": "^7.0.3",
-		"magic-string": "^0.30.11",
+    "cross-env": "^7.0.3",
+    "magic-string": "^0.30.11",
     "typescript": "^5.9.2",
     "vite": "^6.3.5"
   },
-	"dependencies": {
-		"@series-inc/venus-sdk": "file:./venus-sdk/series-inc-venus-sdk-3.1.1.tgz",
-		"phaser": "^3.90.0"
-	}
+  "dependencies": {
+    "@series-inc/venus-sdk": "^3.1.0-beta.0",
+    "phaser": "^3.90.0"
+  }
 }

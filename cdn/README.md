@@ -39,10 +39,6 @@ venus create-game  # Generates game.config.json with unique gameId
 
 **Deploy your game:**
 ```bash
-# Quick build and publish
-npm run yeet
-
-# Or manually with Venus CLI
 npm run build
 venus update-and-publish-game
 ```
