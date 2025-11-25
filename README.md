@@ -17,7 +17,7 @@ Start a Venus-ready Phaser game in minutes. This repo wires up Phaser 3, TypeScr
 npm install
 npm install @series-inc/venus-sdk@latest # optional - grab the latest version of the Venus SDK
 venus create-game --name <name> --description <description> --path dist
-npm run dev            # opens the template at http://localhost:3000
+npm run dev            # opens the template at http://localhost:5173
 ```
 
 When it feels ready:

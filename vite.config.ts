@@ -6,9 +6,6 @@ import { venusLibrariesPlugin } from "@series-inc/venus-sdk/vite";
 
 export default defineConfig({
   plugins: [venusLibrariesPlugin()],
-  server: {
-    port: 3000,
-  },
   base: "./",
   build: {
     target: "es2022", // Support top-level await for embedded libraries
