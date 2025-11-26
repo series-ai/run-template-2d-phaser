@@ -2,9 +2,6 @@
 # If Venus support asks for your project, run this to share your source.
 # It’s meant for upload issues after you’ve tried everything else.
 
-# Ensure script errors fail fast (exit on error, missing vars, or pipeline failure).
-set -euo pipefail
-
 # Set archive filename based on the current directory name.
 ARCHIVE_NAME="$(basename "$PWD").zip"
 
