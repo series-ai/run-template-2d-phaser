@@ -3,34 +3,9 @@ import HelloWorldScene from './scenes/HelloWorldScene';
 import './style.css';
 import VenusAPI from "@series-inc/venus-sdk/api";
 
-// ============================================================================
-// IMPORTANT: NO VenusAPI CALLS SHOULD BE MADE UNTIL initializeAsync RESOLVES
-// ============================================================================
-// VenusAPI must be fully initialized before any of its methods (log, error,
-// storage, ads, etc.) can be used. Wait for initializeAsync to complete
-// before calling any VenusAPI methods or starting gameplay that uses the SDK.
-// ============================================================================
-
 async function bootstrap(): Promise<void> {
   try {
-    // Step 1: Initialize VenusAPI FIRST
-    const options = {
-      helpText: "Phaser 3 + Vite + TypeScript template with VenusAPI integration",
-      mock: {
-        // Mock options can be added here for development
-      },
-    };
-
-    const success = await VenusAPI.initializeAsync(options);
-
-    if (!success) {
-      VenusAPI.error("[Main] VenusAPI initialization failed");
-      return;
-    }
-
-    VenusAPI.log("[Main] VenusAPI initialized successfully");
-
-    // Step 2: Create Phaser game AFTER VenusAPI is ready
+    // Create Phaser game
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       width: 720,
