@@ -8,7 +8,8 @@
     "_build": "tsc && vite build",
     "build": "npm run _build",
     "build:bundled": "cross-env VENUS_DISABLE_EMBEDDED_LIBS=true npm run _build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm run build && venus deploy"
   },
   "keywords": [
     "phaser",
