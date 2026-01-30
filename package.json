@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@series-inc/rundot-game-sdk": "^5.0.4",
+    "firebase": "^11.1.0",
     "phaser": "^3.90.0"
   }
 }
