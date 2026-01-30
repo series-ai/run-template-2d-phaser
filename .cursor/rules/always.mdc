@@ -1,6 +1,6 @@
 ---
 alwaysApply: true
 ---
-When dealing with the VenusAPI for features like storage, ads, user profiles, always check the latest documentation first: https://series-1.gitbook.io/venus-docs/venus-docs/venus-sdk
+When dealing with the RundotGameAPI for features like storage, ads, user profiles, always check the latest documentation first: <https://series-1.gitbook.io/venus-docs/venus-docs/venus-sdk>
 
-When dealing with publishing the game to the Venus platform, always check the latest CLI documentation: https://series-1.gitbook.io/venus-docs/venus-docs/venus-cli
+When dealing with publishing the game to the RUN.game platform, always check the latest CLI documentation: <https://series-1.gitbook.io/venus-docs/venus-docs/venus-cli>

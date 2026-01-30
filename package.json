@@ -7,9 +7,9 @@
     "dev": "vite",
     "_build": "tsc && vite build",
     "build": "npm run _build",
-    "build:bundled": "cross-env VENUS_DISABLE_EMBEDDED_LIBS=true npm run _build",
+    "build:bundled": "cross-env RUNDOT_GAME_DISABLE_EMBEDDED_LIBS=true npm run _build",
     "preview": "vite preview",
-    "deploy": "npm run build && venus deploy"
+    "deploy": "npm run build && rundot deploy"
   },
   "keywords": [
     "phaser",
@@ -28,7 +28,8 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
-    "@series-inc/venus-sdk": "^5.0.0",
+    "@series-inc/rundot-game-sdk": "^5.0.4",
+    "firebase": "^11.1.0",
     "phaser": "^3.90.0"
   }
 }

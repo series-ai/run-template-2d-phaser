@@ -1,5 +1,5 @@
 #!/usr/bin/env pwsh
-# If Venus support asks for your project, run this to share your source.
+# If RUN.game support asks for your project, run this to share your source.
 # It’s meant for upload issues after you’ve tried everything else.
 
 Set-StrictMode -Version Latest
