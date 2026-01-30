@@ -28,7 +28,7 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
-    "@series-inc/venus-sdk": "^5.0.0",
+    "@series-inc/rundot-game-sdk": "^5.0.4",
     "phaser": "^3.90.0"
   }
 }
