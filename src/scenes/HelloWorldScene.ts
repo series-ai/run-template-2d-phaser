@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import VenusAPI from "@series-inc/venus-sdk/api";
+import RundotGameAPI from "@series-inc/rundot-game-sdk/api";
 
 export default class HelloWorldScene extends Phaser.Scene {
   private mainText!: Phaser.GameObjects.Text;
@@ -11,7 +11,7 @@ export default class HelloWorldScene extends Phaser.Scene {
   }
 
   create(): void {
-    VenusAPI.log("[HelloWorldScene] Create called - VenusAPI already initialized");
+    RundotGameAPI.log("[HelloWorldScene] Create called - RundotGameAPI already initialized");
 
     const gameWidth = this.scale.width;
     const gameHeight = this.scale.height;
@@ -39,7 +39,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     });
     this.mainText.setOrigin(0.5);
 
-    // Start ball movement immediately (VenusAPI is ready)
+    // Start ball movement immediately (RundotGameAPI is ready)
     body.setVelocity(150, 200);
 
     // Add color changing animation

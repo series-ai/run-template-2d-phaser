@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import HelloWorldScene from './scenes/HelloWorldScene';
 import './style.css';
-import VenusAPI from "@series-inc/venus-sdk/api";
+import RundotGameAPI from "@series-inc/rundot-game-sdk/api";
 
 async function bootstrap(): Promise<void> {
   try {
@@ -27,7 +27,7 @@ async function bootstrap(): Promise<void> {
     };
 
     new Phaser.Game(config);
-    VenusAPI.log("[Main] Phaser game created");
+    RundotGameAPI.log("[Main] Phaser game created");
   } catch (error) {
     console.error("[Main] Bootstrap error:", error);
   }

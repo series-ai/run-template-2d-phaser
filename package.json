@@ -7,9 +7,9 @@
     "dev": "vite",
     "_build": "tsc && vite build",
     "build": "npm run _build",
-    "build:bundled": "cross-env VENUS_DISABLE_EMBEDDED_LIBS=true npm run _build",
+    "build:bundled": "cross-env RUNDOT_GAME_DISABLE_EMBEDDED_LIBS=true npm run _build",
     "preview": "vite preview",
-    "deploy": "npm run build && venus deploy"
+    "deploy": "npm run build && rundot deploy"
   },
   "keywords": [
     "phaser",
