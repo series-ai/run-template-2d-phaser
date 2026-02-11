@@ -1,5 +1,5 @@
 {
-  "name": "_template_phaser",
+  "name": "run-template-2d-phaser",
   "version": "1.0.0",
   "description": "Phaser 3 + Vite + TypeScript template",
   "type": "module",
@@ -18,7 +18,7 @@
     "game"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "SEE LICENSE IN LICENSE.txt",
   "devDependencies": {
     "@babel/parser": "^7.26.3",
     "@types/node": "^24.3.0",
@@ -29,7 +29,6 @@
   },
   "dependencies": {
     "@series-inc/rundot-game-sdk": "^5.2.0",
-    "firebase": "^11.1.0",
     "phaser": "^3.90.0"
   }
 }
