@@ -3,7 +3,7 @@ import RundotGameAPI from "@series-inc/rundot-game-sdk/api";
 
 export default class HelloWorldScene extends Phaser.Scene {
   private mainText!: Phaser.GameObjects.Text;
-  private ball!: Phaser.GameObjects.Arc;
+  private ball?: Phaser.GameObjects.Image;
   private clickButton!: Phaser.GameObjects.Text;
 
   constructor() {
@@ -21,37 +21,16 @@ export default class HelloWorldScene extends Phaser.Scene {
     // Simple background
     this.add.rectangle(centerX, centerY, gameWidth, gameHeight, 0x1a1a2e);
 
-    // Create a simple yellow ball
-    this.ball = this.add.circle(centerX, 200, 30, 0xffff00);
-
-    // Enable physics on the ball
-    this.physics.add.existing(this.ball);
-    const body = this.ball.body as Phaser.Physics.Arcade.Body;
-    body.setCollideWorldBounds(true);
-    body.setBounce(1);
-    body.setCircle(30);
-
     // Add text
-    this.mainText = this.add.text(centerX, centerY, "Game Started!", {
+    this.mainText = this.add.text(centerX, centerY, "Loading asset…", {
       fontSize: "24px",
       color: "#ffffff",
       align: "center",
     });
     this.mainText.setOrigin(0.5);
 
-    // Start ball movement immediately (RundotGameAPI is ready)
-    body.setVelocity(150, 200);
-
-    // Add color changing animation
-    this.time.addEvent({
-      delay: 1000,
-      callback: () => {
-        const colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff];
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
-        this.ball.setFillStyle(randomColor);
-      },
-      loop: true,
-    });
+    // Fetch sprite from CDN and create bouncing ball once loaded
+    this.fetchAndCreateBall(centerX);
 
     // Update text and create button after delay
     this.time.delayedCall(1500, () => {
@@ -64,8 +43,41 @@ export default class HelloWorldScene extends Phaser.Scene {
     closeBtn?.addEventListener('click', () => this.hideDialog());
   }
 
+  private async fetchAndCreateBall(centerX: number): Promise<void> {
+    const blob = await RundotGameAPI.cdn.fetchAsset('disk.svg');
+    const blobUrl = URL.createObjectURL(blob);
+    RundotGameAPI.log(`[HelloWorldScene] Fetched CDN asset, blob size: ${blob.size}`);
+
+    this.load.image('disk', blobUrl);
+    this.load.once('complete', () => {
+      URL.revokeObjectURL(blobUrl);
+
+      this.ball = this.add.image(centerX, 200, 'disk');
+      this.ball.setDisplaySize(64, 64);
+
+      this.physics.add.existing(this.ball);
+      const body = this.ball.body as Phaser.Physics.Arcade.Body;
+      body.setCollideWorldBounds(true);
+      body.setBounce(1);
+      body.setCircle(32);
+      body.setVelocity(150, 200);
+
+      // Tint-changing animation
+      this.time.addEvent({
+        delay: 1000,
+        callback: () => {
+          const tints = [0xff6666, 0x66ff66, 0x6666ff, 0xffffff, 0xff66ff, 0x66ffff];
+          const randomTint = tints[Math.floor(Math.random() * tints.length)];
+          this.ball?.setTint(randomTint);
+        },
+        loop: true,
+      });
+    });
+    this.load.start();
+  }
+
   update(): void {
-    // Maintain ball speed
+    if (!this.ball) return;
     const body = this.ball.body as Phaser.Physics.Arcade.Body;
     const speed = Math.sqrt(body.velocity.x * body.velocity.x + body.velocity.y * body.velocity.y);
     if (speed > 0 && speed < 270) {
