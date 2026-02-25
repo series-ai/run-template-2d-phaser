@@ -44,15 +44,15 @@ export default class HelloWorldScene extends Phaser.Scene {
   }
 
   private async fetchAndCreateBall(centerX: number): Promise<void> {
-    const blob = await RundotGameAPI.cdn.fetchAsset('disk.svg');
+    const blob = await RundotGameAPI.cdn.fetchAsset('circle.png');
     const blobUrl = URL.createObjectURL(blob);
     RundotGameAPI.log(`[HelloWorldScene] Fetched CDN asset, blob size: ${blob.size}`);
 
-    this.load.image('disk', blobUrl);
+    this.load.image('circle', blobUrl);
     this.load.once('complete', () => {
       URL.revokeObjectURL(blobUrl);
 
-      this.ball = this.add.image(centerX, 200, 'disk');
+      this.ball = this.add.image(centerX, 200, 'circle');
       this.ball.setDisplaySize(64, 64);
 
       this.physics.add.existing(this.ball);
