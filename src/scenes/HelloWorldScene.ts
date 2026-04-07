@@ -1,17 +1,19 @@
 import Phaser from 'phaser';
 import RundotGameAPI from "@series-inc/rundot-game-sdk/api";
+import { StowKitPhaserLoader, StowKitPhaserPack } from "@series-inc/stowkit-phaser-loader";
 
 export default class HelloWorldScene extends Phaser.Scene {
   private mainText!: Phaser.GameObjects.Text;
-  private ball?: Phaser.GameObjects.Image;
+  private ball?: Phaser.GameObjects.Sprite;
   private clickButton!: Phaser.GameObjects.Text;
+  private pack!: StowKitPhaserPack;
 
   constructor() {
     super("hello-world");
   }
 
-  create(): void {
-    RundotGameAPI.log("[HelloWorldScene] Create called - RundotGameAPI already initialized");
+  async create(): Promise<void> {
+    RundotGameAPI.log("[HelloWorldScene] Create called - loading StowKit pack");
 
     const gameWidth = this.scale.width;
     const gameHeight = this.scale.height;
@@ -29,8 +31,8 @@ export default class HelloWorldScene extends Phaser.Scene {
     });
     this.mainText.setOrigin(0.5);
 
-    // Fetch sprite from CDN and create bouncing ball once loaded
-    this.fetchAndCreateBall(centerX);
+    // Load the StowKit pack from CDN and create bouncing ball
+    await this.loadPackAndCreateBall(centerX);
 
     // Update text and create button after delay
     this.time.delayedCall(1500, () => {
@@ -43,37 +45,32 @@ export default class HelloWorldScene extends Phaser.Scene {
     closeBtn?.addEventListener('click', () => this.hideDialog());
   }
 
-  private async fetchAndCreateBall(centerX: number): Promise<void> {
-    const blob = await RundotGameAPI.cdn.fetchAsset('circle.png');
-    const blobUrl = URL.createObjectURL(blob);
-    RundotGameAPI.log(`[HelloWorldScene] Fetched CDN asset, blob size: ${blob.size}`);
+  private async loadPackAndCreateBall(centerX: number): Promise<void> {
+    // Fetch .stow pack from CDN
+    const blob = await RundotGameAPI.cdn.fetchAsset('default.stow');
+    const arrayBuffer = await blob.arrayBuffer();
+    RundotGameAPI.log(`[HelloWorldScene] Fetched StowKit pack, size: ${arrayBuffer.byteLength}`);
 
-    this.load.image('circle', blobUrl);
-    this.load.once('complete', () => {
-      URL.revokeObjectURL(blobUrl);
-
-      this.ball = this.add.image(centerX, 200, 'circle');
-      this.ball.setDisplaySize(64, 64);
-
-      this.physics.add.existing(this.ball);
-      const body = this.ball.body as Phaser.Physics.Arcade.Body;
-      body.setCollideWorldBounds(true);
-      body.setBounce(1);
-      body.setCircle(32);
-      body.setVelocity(150, 200);
-
-      // Tint-changing animation
-      this.time.addEvent({
-        delay: 1000,
-        callback: () => {
-          const tints = [0xff6666, 0x66ff66, 0x6666ff, 0xffffff, 0xff66ff, 0x66ffff];
-          const randomTint = tints[Math.floor(Math.random() * tints.length)];
-          this.ball?.setTint(randomTint);
-        },
-        loop: true,
-      });
+    // Parse the pack
+    this.pack = await StowKitPhaserLoader.loadFromMemory(arrayBuffer, {
+      basisPath: 'stowkit/basis/',
+      wasmPath: 'stowkit/stowkit_reader.wasm',
     });
-    this.load.start();
+
+    // Load spritesheet from pack — registers texture, frames, and animation
+    const { textureKey, animationKey } = await this.pack.loadSpriteSheet('ball_animation', this);
+
+    // Create the animated ball sprite using the base texture key
+    this.ball = this.add.sprite(centerX, 200, textureKey);
+    this.ball.setDisplaySize(64, 64);
+    this.ball.play(animationKey);
+
+    this.physics.add.existing(this.ball);
+    const body = this.ball.body as Phaser.Physics.Arcade.Body;
+    body.setCollideWorldBounds(true);
+    body.setBounce(1);
+    body.setCircle(32);
+    body.setVelocity(150, 200);
   }
 
   update(): void {

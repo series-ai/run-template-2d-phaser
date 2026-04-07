@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "stringId": "ball_sheet",
+  "tags": [],
+  "pack": "default",
+  "type": "texture",
+  "quality": "best",
+  "resize": "full",
+  "filtering": "linear",
+  "generateMipmaps": false,
+  "cache": {
+    "sourceSize": 606197,
+    "sourceLastModified": 1775539382109.1465,
+    "settingsHash": "2|q=3|r=1|f=0|m=false"
+  }
+}

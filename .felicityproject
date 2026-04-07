@@ -1,0 +1,10 @@
+{
+  "srcArtDir": "assets",
+  "name": "run-template-2d-phaser",
+  "cdnAssetsPath": "public/cdn-assets",
+  "packs": [
+    {
+      "name": "default"
+    }
+  ]
+}

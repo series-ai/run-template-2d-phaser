@@ -7,7 +7,7 @@ async function bootstrap(): Promise<void> {
   try {
     // Create Phaser game
     const config: Phaser.Types.Core.GameConfig = {
-      type: Phaser.AUTO,
+      type: Phaser.WEBGL,
       width: 720,
       height: 1560,
       parent: "app",

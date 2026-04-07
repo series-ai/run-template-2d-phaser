@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "textureAsset": "ball_sheet.png",
+  "rows": 8,
+  "columns": 8,
+  "frameCount": 64,
+  "frameRate": 6
+}
