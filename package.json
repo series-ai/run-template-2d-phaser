@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@series-inc/rundot-game-sdk": "^5.3.0",
+    "@series-inc/stowkit-phaser-loader": "^0.1.25",
     "phaser": "^3.90.0"
   }
 }
