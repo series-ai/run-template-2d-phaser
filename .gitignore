@@ -12,7 +12,6 @@ coverage/
 # StowKit
 *.stowcache
 .stow-thumbnails/
-public/cdn-assets/
 Open Packer.bat
 open-packer.sh
 .rundot/3d-engine-docs
