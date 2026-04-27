@@ -1,6 +1,10 @@
 import Phaser from 'phaser';
 import RundotGameAPI from "@series-inc/rundot-game-sdk/api";
 
+let bootStep2Fired = false;
+let bootStep3Fired = false;
+let bootStep4Fired = false;
+
 export default class HelloWorldScene extends Phaser.Scene {
   private mainText!: Phaser.GameObjects.Text;
   private ball?: Phaser.GameObjects.Image;
@@ -45,6 +49,11 @@ export default class HelloWorldScene extends Phaser.Scene {
 
   private async fetchAndCreateBall(centerX: number): Promise<void> {
     const blob = await RundotGameAPI.cdn.fetchAsset('circle.png');
+    RundotGameAPI.analytics.recordCustomEvent('cdn_asset_loaded', { size: blob.size });
+    if (!bootStep2Fired) {
+      bootStep2Fired = true;
+      RundotGameAPI.analytics.trackFunnelStep(2, 'cdn_asset_loaded', 'boot', 1);
+    }
     const blobUrl = URL.createObjectURL(blob);
     RundotGameAPI.log(`[HelloWorldScene] Fetched CDN asset, blob size: ${blob.size}`);
 
@@ -53,6 +62,11 @@ export default class HelloWorldScene extends Phaser.Scene {
       URL.revokeObjectURL(blobUrl);
 
       this.ball = this.add.image(centerX, 200, 'circle');
+      RundotGameAPI.analytics.recordCustomEvent('ball_visible');
+      if (!bootStep3Fired) {
+        bootStep3Fired = true;
+        RundotGameAPI.analytics.trackFunnelStep(3, 'ball_visible', 'boot', 1);
+      }
       this.ball.setDisplaySize(64, 64);
 
       this.physics.add.existing(this.ball);
@@ -101,11 +115,17 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.clickButton.setInteractive({ useHandCursor: true });
 
     this.clickButton.on("pointerdown", () => {
+      RundotGameAPI.analytics.recordCustomEvent('button_clicked');
+      if (!bootStep4Fired) {
+        bootStep4Fired = true;
+        RundotGameAPI.analytics.trackFunnelStep(4, 'first_button_click', 'boot', 1);
+      }
       this.showDialog();
     });
   }
 
   private showDialog(): void {
+    RundotGameAPI.analytics.recordCustomEvent('dialog_opened');
     const overlay = document.getElementById("dialog-overlay");
     if (overlay) {
       overlay.classList.remove("hidden");
@@ -113,6 +133,7 @@ export default class HelloWorldScene extends Phaser.Scene {
   }
 
   private hideDialog(): void {
+    RundotGameAPI.analytics.recordCustomEvent('dialog_closed');
     const overlay = document.getElementById('dialog-overlay');
     if (overlay) {
       overlay.classList.add('hidden');

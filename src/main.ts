@@ -3,6 +3,21 @@ import HelloWorldScene from './scenes/HelloWorldScene';
 import './style.css';
 import RundotGameAPI from "@series-inc/rundot-game-sdk/api";
 
+let bootStep1Fired = false;
+
+RundotGameAPI.lifecycles.onPause(() => {
+  RundotGameAPI.analytics.recordCustomEvent('game_paused');
+});
+RundotGameAPI.lifecycles.onResume(() => {
+  RundotGameAPI.analytics.recordCustomEvent('game_resumed');
+});
+RundotGameAPI.lifecycles.onSleep(() => {
+  RundotGameAPI.analytics.recordCustomEvent('game_sleep');
+});
+RundotGameAPI.lifecycles.onQuit(() => {
+  RundotGameAPI.analytics.recordCustomEvent('game_quit');
+});
+
 async function bootstrap(): Promise<void> {
   try {
     // Create Phaser game
@@ -27,6 +42,11 @@ async function bootstrap(): Promise<void> {
     };
 
     new Phaser.Game(config);
+    RundotGameAPI.analytics.recordCustomEvent('game_loaded');
+    if (!bootStep1Fired) {
+      bootStep1Fired = true;
+      RundotGameAPI.analytics.trackFunnelStep(1, 'game_loaded', 'boot', 1);
+    }
     RundotGameAPI.log("[Main] Phaser game created");
   } catch (error) {
     console.error("[Main] Bootstrap error:", error);
