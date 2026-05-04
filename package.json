@@ -26,7 +26,8 @@
     "firebase": "^12.12.1",
     "magic-string": "^0.30.11",
     "typescript": "^5.9.2",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "ws": "^8.0.0"
   },
   "dependencies": {
     "@series-inc/rundot-game-sdk": "^5.14.0",
